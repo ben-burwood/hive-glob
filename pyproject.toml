@@ -1,0 +1,19 @@
+[project]
+name = "hive-glob"
+version = "0.1"
+description = "Hive-Partitioned Dataset Globbing"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.optional-dependencies]
+s3 = [
+    "s3fs>=2026.2.0",
+]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[tool.ruff]
+line-length = 150
