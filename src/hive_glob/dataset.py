@@ -1,17 +1,20 @@
 from dataclasses import dataclass
 from typing import Iterator
 
+from hive_glob.domain import PartitionKey, PartitionValue
 from hive_glob.filesystem import FileSystem
-from hive_glob.filter import FilterValue, PartitionFilter, PartitionKey, PartitionValue
+from hive_glob.filter import FilterValue, PartitionFilter
 
 
 @dataclass(frozen=True)
 class HiveDataset:
+    """Configuration of a Hive Dataset"""
+
     root: str  # Root Path of the Hive Dataset (e.g., "s3://bucket/dataset/")
     fs: FileSystem
 
     # ------------------------
-    # Partition discovery
+    # Partition Discovery
     # ------------------------
     @staticmethod
     def _parse_partition(name: str) -> tuple[PartitionKey, PartitionValue] | None:
@@ -21,9 +24,8 @@ class HiveDataset:
         return k, v
 
     def _walk_partitions(self, base_path: str, filter_obj: PartitionFilter, collected: dict[str, str]) -> Iterator[tuple[str, dict[str, str]]]:
-        """
-        Depth-first traversal with pruning.
-        Yields (path, partition_dict)
+        """Depth-first Traversal with Pruning
+        :return (path, partition_dict)
         """
         partition_dirs = []
         files_present = False
@@ -59,6 +61,7 @@ class HiveDataset:
     # ------------------------
     # Public API
     # ------------------------
+    @property
     def partition_keys(self) -> list[PartitionKey]:
         """Discover All Partition Keys in the Dataset"""
         keys = set()
@@ -93,6 +96,8 @@ class HiveDataset:
                 vals.add(p[key])
         return sorted(vals)
 
+    # ------------------------
     # Convenience Methods
+    # ------------------------
     def glob(self, **filters):
         return self.files(filters=filters)

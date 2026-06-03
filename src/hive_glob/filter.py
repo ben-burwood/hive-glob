@@ -1,8 +1,6 @@
 from typing import Iterable, Optional
 
-type PartitionKey = str
-
-type PartitionValue = str
+from hive_glob.domain import PartitionKey, PartitionValue
 
 # Filter Value as a Key,[Value] Pair
 ## Key - Partition Key (e.g., "month_id")

@@ -2,6 +2,8 @@ from typing import Protocol
 
 
 class FileSystem(Protocol):
+    """FileSystem Protocol (Interface) for All FileSystem Operations"""
+
     def ls(self, path: str) -> list[str]: ...
 
     def glob(self, path: str) -> list[str]: ...
@@ -37,16 +39,16 @@ class S3FileSystem:
     def __init__(self):
         import s3fs
 
-        self.s3 = s3fs.S3FileSystem()
+        self._s3 = s3fs.S3FileSystem()
 
     def ls(self, path: str) -> list[str]:
-        return self.s3.ls(path)
+        return self._s3.ls(path)
 
     def glob(self, path: str) -> list[str]:
-        return self.s3.glob(path)
+        return self._s3.glob(path)
 
     def is_dir(self, path: str) -> bool:
-        return self.s3.isdir(path)
+        return self._s3.isdir(path)
 
     def join(self, *parts: str) -> str:
         return "/".join(p.strip("/") for p in parts if p)
