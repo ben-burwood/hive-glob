@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 from typing import Iterator
 
@@ -32,7 +33,9 @@ class HiveDataset:
 
         for p in self.fs.ls(base_path):
             if self.fs.is_dir(p):
-                name = p.rstrip("/").split("/")[-1]
+                # Normalise the OS separator to "/" so partition names parse
+                # correctly on any platform (LocalFileSystem uses os.sep, S3 uses "/").
+                name = p.replace(os.sep, "/").rstrip("/").split("/")[-1]
                 parsed = self._parse_partition(name)
 
                 if parsed:
