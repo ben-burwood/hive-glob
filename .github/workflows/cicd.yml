@@ -1,0 +1,48 @@
+name: CI/CD
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [published]
+
+jobs:
+  ci:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+
+      - name: Install dependencies
+        run: uv sync --all-extras
+
+      - name: Lint (ruff)
+        run: |
+          uvx ruff check
+          uvx ruff format --check
+
+      - name: Test (pytest)
+        run: uv run pytest
+
+      - name: Build (verify package builds)
+        run: uv build
+
+  release:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-slim
+    needs: ci
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Build wheel + sdist
+        run: uv build
+
+      - name: Upload artifacts to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" dist/* --clobber

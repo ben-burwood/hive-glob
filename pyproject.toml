@@ -11,6 +11,11 @@ s3 = [
     "s3fs>=2026.2.0",
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=8",
+]
+
 [build-system]
 requires = ["uv_build"]
 build-backend = "uv_build"

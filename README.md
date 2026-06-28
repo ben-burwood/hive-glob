@@ -2,7 +2,20 @@
 
 Simple Python Library for aiding Hive Partitioned Dataset Handling.
 
-Supports Local and S3 Based FileSystems.
+Supports Local FileSystems and S3-Based Objects Stores.
+
+## Installation
+
+Install from Github or PyPi:
+
+```bash
+pip install hive-glob
+
+# With S3FS Addition
+
+```bash
+pip install hive-glob[s3]
+```
 
 ## Example
 
